@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+         #
+#    By: musajid <musajid@hive.student.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/06 12:49:09 by musajid           #+#    #+#              #
-#    Updated: 2025/08/06 13:27:33 by musajid          ###   ########.fr        #
+#    Updated: 2025/08/06 20:08:11 by musajid          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ $(LIBFTNAME):
 		$(MAKE) -C $(LIBFTDIR)
 
 $(NAME): $(OBJ) $(LIBFTNAME)
-		cp $(LIBFTNAME) $(NAME)
+		$(CC) $(CFLAGS) $(OBJ) $(LIBFTNAME) -o $(NAME)
 
 %.o: %.c
 		$(CC) $(CFLAGS) -c $< -o $@
