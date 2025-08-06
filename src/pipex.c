@@ -1,10 +1,18 @@
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/06 13:23:51 by musajid           #+#    #+#             */
+/*   Updated: 2025/08/06 13:23:51 by musajid          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void freearray(char **arr)
+#include "pipex.h"
+
+static void freearray(char **arr)
 {
     int i = 0;
     while (arr[i])
@@ -15,7 +23,7 @@ void freearray(char **arr)
     free(arr);
 }
 
-char * get_path(char **envp)
+static char * get_path(char **envp)
 {
     int i = 0;
     char **path;
@@ -28,9 +36,9 @@ char * get_path(char **envp)
             return (path[i] + 5);
         i++;
     }
-    return NULL; 
+    return NULL;
 }
-void    splitnfit(char *cmdstr, char **envp)
+static void    splitnfit(char *cmdstr, char **envp)
 {
     char *path;
     int i = 0;
@@ -47,7 +55,7 @@ void    splitnfit(char *cmdstr, char **envp)
     }
     if (execve(path, splitcmd, envp) == -1) // invoking the execve to execute the command
     {
-        perror(execve);
+        ft_printf("error has been occured\n");
         freearray(paths);
         freearray(splitcmd);
         free(cmd);
