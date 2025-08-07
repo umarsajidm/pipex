@@ -117,7 +117,7 @@ int	main(int ac, char **av, char **envp)
 	init_struct(&i);
 	pipe(i.fd);
 	if (ac != 5)
-		return (printf("arguements should be like ./pipex infile cmd1 cmd2 outfile\n"));
+		return (printf("should be ./pipex infile cmd1 cmd2 outfile\n"));
 	i.infile = open(av[1], O_RDONLY);
 	if (i.infile < 0)
 		error();
