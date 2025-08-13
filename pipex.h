@@ -6,7 +6,7 @@
 /*   By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 12:44:59 by musajid           #+#    #+#             */
-/*   Updated: 2025/08/07 15:26:17 by musajid          ###   ########.fr       */
+/*   Updated: 2025/08/13 18:44:48 by musajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 # include <stdio.h>
 # include <fcntl.h>
 # include <string.h>
+# include <error.h>
+# include <errno.h>
+# include <unistd.h>
 
 typedef struct f_struct
 {
@@ -38,7 +41,12 @@ typedef struct s_struct
 }   main_struct;
 
 int	main(int ac, char **av, char **envp);
+
+void	cmd2exe(int fd[2], char **av, char **envp);
+void	cmd1exe(int fd[2], char **av, char **envp);
+void	close_all(main_struct *i);
+void	splitnfit(char *cmdstr, char **envp);
+void strerrornExit(void);
 void	freearray(char **arr);
-void	error(void);
 
 #endif
