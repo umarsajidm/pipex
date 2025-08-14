@@ -6,7 +6,7 @@
 #    By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/06 12:49:09 by musajid           #+#    #+#              #
-#    Updated: 2025/08/13 13:07:00 by musajid          ###   ########.fr        #
+#    Updated: 2025/08/14 14:11:42 by musajid          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ CFLAGS = -Wall -Wextra -Werror -I.
 
 # Directories
 SRCS = src/pipex.c \
-		src/utilities.c
+		src/utilities.c \
+		src/freenerr.c
 
 # libft
 LIBFTDIR = libft
