@@ -25,6 +25,7 @@ static	void	init_struct(main_struct	*i)
 int	main(int ac, char **av, char **envp)
 {
 	main_struct	i;
+	int status;
 
 	init_struct(&i);
 	pipe(i.fd);
@@ -39,8 +40,10 @@ int	main(int ac, char **av, char **envp)
 	close(i.fd[0]);
 	close(i.fd[1]);
 	waitpid(i.pid1, NULL, 0);
-	waitpid(i.pid2, NULL, 0);
+	waitpid(i.pid2, &status, 0);
 	close_all(&i);
-	return (0);
+	if (WIFEXITED(status))
+		return(WEXITSTATUS(status));
+	return (1);
 }
 

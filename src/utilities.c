@@ -6,12 +6,14 @@
 /*   By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:25:08 by musajid           #+#    #+#             */
-/*   Updated: 2025/08/14 17:15:17 by musajid          ###   ########.fr       */
+/*   Updated: 2025/08/16 16:22:54 by musajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+
+//getting the path form environment
 char	**get_path(char **envp)
 {
 	int		i;
@@ -35,9 +37,10 @@ char	**get_path(char **envp)
 	return (NULL);
 }
 
+//searching for the executable path of our command in the environment path
 char *pathtoexecute(char **cmd, char**envp)
 {
-	int	i;
+	int		i;
 	char	**paths;
 	char	*path;
 	char	*pathcmd;
@@ -71,10 +74,7 @@ char *pathtoexecute(char **cmd, char**envp)
 		free(path);
 		i++;
 	}
-	//commmand not found
-	free(pathcmd);
-	freearray(paths);
-	//strerrornExit();
+	freeall(paths, pathcmd, cmd[0]);
 	return (NULL);
 	}
 
@@ -91,10 +91,15 @@ void 	execution(char *cmd, char **envp)
 	if (!splitcmd || !*splitcmd)
 		freeErrorExit(splitcmd);
 	path = pathtoexecute(splitcmd, envp);
+	if (path == NULL)
+		{
+			freearray(splitcmd);
+			// commandNotFound();
+		}
 	if (!path)
 	{
-		freearray(splitcmd);
-		strerrornExit();
+		freeErrorExit(splitcmd);
+
 	}
 	if (execve(path, splitcmd,  envp) == -1)
 	{
@@ -109,6 +114,8 @@ void	cmd1exe(int fd[2], char **av, char **envp)
 {
 	int infile;
 
+	if (access(av[1], R_OK) == -1)
+		perror(av[1]);
 	infile = open(av[1], O_RDONLY);
 	if(infile < 0)
 		strerrornExit();
@@ -122,6 +129,8 @@ void	cmd2exe(int fd[2], char **av, char **envp)
 {
 	int outfile;
 
+	if (access(av[4], W_OK) == -1)
+		perror(av[4]);
 	outfile = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (outfile < 0)
 		strerrornExit();

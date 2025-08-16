@@ -6,7 +6,7 @@
 /*   By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 12:44:59 by musajid           #+#    #+#             */
-/*   Updated: 2025/08/14 15:44:08 by musajid          ###   ########.fr       */
+/*   Updated: 2025/08/16 16:22:50 by musajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,10 @@ void	close_all(main_struct *i);
 void	splitnfit(char *cmdstr, char **envp);
 
 void	freeErrorExit(char **arr);
-void 	strerrornExit(void);
+void strerrornExit(void);
 void	freearray(char **arr);
+void	freeall(char **arr, char *str, char *cmd);
+// void	commandNotFound();
 
 char	**get_path(char **envp);
 int 	check_path(char *path);

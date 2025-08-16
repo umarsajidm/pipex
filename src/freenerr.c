@@ -6,7 +6,7 @@
 /*   By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 14:11:25 by musajid           #+#    #+#             */
-/*   Updated: 2025/08/14 14:12:21 by musajid          ###   ########.fr       */
+/*   Updated: 2025/08/16 16:22:10 by musajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	freeErrorExit(char **arr)
 	if (arr)
 		freearray(arr);
 	perror("error");
-	exit(EXIT_FAILURE);
+	exit(127);
 }
 
 void strerrornExit(void)
@@ -38,4 +38,19 @@ void strerrornExit(void)
 	strerror(errno);
 	exit(EXIT_FAILURE);
 }
+void	freeall(char **arr, char *str, char *cmd)
+{
+	freearray(arr);
+	free(str);
 
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": command not found\n", 2);
+	// // errno = ENOENT;
+	// // exit(127);
+}
+
+// void comma()
+// {
+// 	errno = ENOENT;
+// 	exit(127);
+// }
