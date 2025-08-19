@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   freenerr.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: musajid <musajid@hive.student.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 14:11:25 by musajid           #+#    #+#             */
-/*   Updated: 2025/08/16 16:22:10 by musajid          ###   ########.fr       */
+/*   Updated: 2025/08/17 15:48:50 by musajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,29 @@ void	freearray(char **arr)
 	}
 	free(arr);
 }
-
-void	freeErrorExit(char **arr)
+void	freestr(char *str)
+{
+	if (str)
+		free(str);
+}
+void freestrnarrExit(char **arr, char *str, int i)
+{
+	freearray(arr);
+	free(str);
+	if (1)
+		exit(EXIT_FAILURE);
+	if (126)
+	{
+		errno = EACCES;
+		exit(126);
+	}
+	if (127)
+	{
+		errno = ENOENT;
+		exit(127);
+	}
+}
+void	freeError(char **arr)
 {
 	if (arr)
 		freearray(arr);
@@ -44,13 +65,12 @@ void	freeall(char **arr, char *str, char *cmd)
 	free(str);
 
 	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found\n", 2);
-	// // errno = ENOENT;
-	// // exit(127);
+	ft_putstr_fd(": command not found\n", 2);	
 }
 
-// void comma()
-// {
-// 	errno = ENOENT;
-// 	exit(127);
-// }
+void commandNotFound(char **arr)
+{
+	freearray(arr);
+	errno = ENOENT;
+	exit(127);
+}

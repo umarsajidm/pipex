@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilities.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: musajid <musajid@hive.student.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:25:08 by musajid           #+#    #+#             */
-/*   Updated: 2025/08/16 16:22:54 by musajid          ###   ########.fr       */
+/*   Updated: 2025/08/17 19:04:30 by musajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	**get_path(char **envp)
 			{
 				paths = ft_split((envp[i] + 5), ':');
 				if (!paths || !*paths)
-					freeErrorExit(paths);
+					freeError(paths);// need to check that for exit
 				return(paths);
 			}
 		i++;
@@ -48,27 +48,19 @@ char *pathtoexecute(char **cmd, char**envp)
 	i = 0;
 	path = NULL;
 	pathcmd = ft_strjoin("/", cmd[0]);
-	if (!pathcmd)
-		strerrornExit();
+	if (!pathcmd) 
+		freeError(&pathcmd);
 	paths = get_path(envp);
 	if (!paths || !*paths)
-		{
-			free(pathcmd);
-			freeErrorExit(paths);
-		}
+		freestrnarrExit(paths, pathcmd, 127);
 	while(paths[i])
 	{
 		path = ft_strjoin(paths[i], pathcmd);
 		if (!path)
+			freestrnarrExit(paths, pathcmd, 1);
+		if (access(path, X_OK) == 0)// form there
 		{
-			free(pathcmd);
-			freearray(paths);
-			strerrornExit();
-		}
-		if (access(path, X_OK) == 0)
-		{
-			freearray(paths);
-			free(pathcmd);
+			freestrnarrExit(paths, pathcmd, 0);
 			return (path);
 		}
 		free(path);
@@ -76,10 +68,16 @@ char *pathtoexecute(char **cmd, char**envp)
 	}
 	freeall(paths, pathcmd, cmd[0]);
 	return (NULL);
-	}
-
-
-
+}
+void	checking(char *path)
+{
+	if ((access(path, F_OK) == 0) && (access(path, X_OK) == -1))
+		errno = EACCES;
+	if (access(path, X_OK) == 0)
+		return ;
+	if (access(path, X_OK))
+		errno = ENOENT;
+}
 void 	execution(char *cmd, char **envp)
 {
 	char	*path;
@@ -89,18 +87,10 @@ void 	execution(char *cmd, char **envp)
 		strerrornExit();
 	splitcmd = ft_split(cmd, ' ');
 	if (!splitcmd || !*splitcmd)
-		freeErrorExit(splitcmd);
+		freeError(splitcmd); //need to check that for exit
 	path = pathtoexecute(splitcmd, envp);
 	if (path == NULL)
-		{
-			freearray(splitcmd);
-			// commandNotFound();
-		}
-	if (!path)
-	{
-		freeErrorExit(splitcmd);
-
-	}
+		commandNotFound(splitcmd);
 	if (execve(path, splitcmd,  envp) == -1)
 	{
 		freearray(splitcmd);
@@ -138,15 +128,4 @@ void	cmd2exe(int fd[2], char **av, char **envp)
 	dup2(fd[0], STDIN_FILENO);
 	close(fd[1]);
 	execution(av[3], envp);
-}
-void	close_all(main_struct *i)
-{
-	if (i->fd[0] >= 0)
-		close(i->fd[0]);
-	if (i->fd[1] >= 0)
-		close(i->fd[1]);
-	if (i->infile >= 0)
-		close(i->infile);
-	if (i->outfile >= 0)
-		close(i->outfile);
 }

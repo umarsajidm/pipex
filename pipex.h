@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: musajid <musajid@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: musajid <musajid@hive.student.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 12:44:59 by musajid           #+#    #+#             */
-/*   Updated: 2025/08/16 16:22:50 by musajid          ###   ########.fr       */
+/*   Updated: 2025/08/17 15:17:43 by musajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,9 @@ typedef struct f_struct
 typedef struct s_struct
 {
     int     fd[2];
-    int     infile;
-    int     outfile;
     pid_t   pid1;
     pid_t   pid2;
+    int     status;
 }   main_struct;
 
 int	main(int ac, char **av, char **envp);
@@ -45,11 +44,12 @@ int	main(int ac, char **av, char **envp);
 void	close_all(main_struct *i);
 void	splitnfit(char *cmdstr, char **envp);
 
-void	freeErrorExit(char **arr);
+void	freeError(char **arr);
 void strerrornExit(void);
 void	freearray(char **arr);
 void	freeall(char **arr, char *str, char *cmd);
-// void	commandNotFound();
+void	commandNotFound(char **arr);
+void freestrnarrExit(char **arr, char *str, int i)
 
 char	**get_path(char **envp);
 int 	check_path(char *path);
