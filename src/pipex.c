@@ -19,12 +19,41 @@ static	void	init_struct(main_struct	*i)
 	i->fd[1] = -1;
 }
 
-void	close_all(main_struct *i)
+void	strerrornexit(void)
 {
-	if (i->fd[0] >= 0)
-		close(i->fd[0]);
-	if (i->fd[1] >= 0)
-		close(i->fd[1]);
+	ft_putstr_fd(strerror(errno), 2);
+	ft_putstr_fd("\n", 2);
+	exit(EXIT_FAILURE);
+}
+
+static	void	cmd1exe(int fd[2], char **av, char **envp)
+{
+	int	infile;
+
+	if (access(av[1], R_OK) == -1)
+		perror(av[1]);
+	infile = open(av[1], O_RDONLY);
+	if (infile < 0)
+		strerrornexit();
+	dup2(infile, STDIN_FILENO);
+	dup2(fd[1], STDOUT_FILENO);
+	close(fd[0]);
+	execution(av[2], envp);
+}
+
+static	void	cmd2exe(int fd[2], char **av, char **envp)
+{
+	int	outfile;
+
+	if (access(av[4], W_OK) == -1)
+		perror(av[4]);
+	outfile = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (outfile < 0)
+		strerrornexit();
+	dup2(outfile, STDOUT_FILENO);
+	dup2(fd[0], STDIN_FILENO);
+	close(fd[1]);
+	execution(av[3], envp);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -36,7 +65,7 @@ int	main(int ac, char **av, char **envp)
 	if (ac != 5)
 		return (printf("should be ./pipex infile cmd1 cmd2 outfile\n"));
 	i.pid1 = fork();
-	if(i.pid1 == -1)
+	if (i.pid1 == -1)
 		perror("fork");
 	if (i.pid1 == 0)
 		cmd1exe(i.fd, av, envp);
@@ -51,7 +80,6 @@ int	main(int ac, char **av, char **envp)
 	waitpid(i.pid2, &i.status, 0);
 	close_all(&i);
 	if (WIFEXITED(i.status))
-		return(WEXITSTATUS(i.status));
+		return (WEXITSTATUS(i.status));
 	return (1);
 }
-
