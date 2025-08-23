@@ -78,7 +78,6 @@ int	main(int ac, char **av, char **envp)
 	close(i.fd[1]);
 	waitpid(i.pid1, NULL, 0);
 	waitpid(i.pid2, &i.status, 0);
-	close_all(&i);
 	if (WIFEXITED(i.status))
 		return (WEXITSTATUS(i.status));
 	return (1);
